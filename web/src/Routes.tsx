@@ -9,18 +9,28 @@
 
 import { Router, Route, Set } from '@redwoodjs/router'
 
+import UsersLayout from 'src/layouts/UsersLayout'
+
 import MainLayout from './layouts/MainLayout/MainLayout'
 
 const Routes = () => {
   return (
     <Router>
+      <Set wrap={UsersLayout} private unauthenticated={'login'} roles={['admin']}>
+        <Route path="/admin/users/new" page={UserNewUserPage} name="newUser" />
+        <Route path="/admin/profile" page={ProfilePage} name="profile" />
+        <Route path="/admin/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
+        <Route path="/admin/users/{id:Int}" page={UserUserPage} name="user" />
+        <Route path="/admin/users" page={UserUsersPage} name="users" />
+      </Set>
       <Set wrap={MainLayout} private unauthenticated={'login'}>
         <Route path="/profile" page={ProfilePage} name="profile" />
+        <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
+        <Route path="/users/{id:Int}" page={UserUserPage} name="user" />
+        <Route path="/users" page={UserUsersPage} name="users" />
       </Set>
       <Route path="/" page={LoginPage} name="login" />
       <Route path="/register" page={SignupPage} name="signup" />
-      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
-      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       <Route notfound page={NotFoundPage} />
     </Router>
   )

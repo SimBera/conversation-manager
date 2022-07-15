@@ -15,7 +15,8 @@ model User {
   username            String    @unique
   hashedPassword      String
   salt                String
-  role                String //@default("user") //user || admin
+  role                String
+  
   resetToken          String?
   resetTokenExpiresAt DateTime?
 }
