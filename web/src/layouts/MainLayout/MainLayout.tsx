@@ -12,10 +12,38 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     <>
       <header>
         <nav>
-          <Link to={routes.profile()}>Profile</Link>{' '}
-          <Link onClick={logOut} to={routes.login()}>
-            Logout
-          </Link>
+          <div
+            style={{
+              height: '300px',
+              display: 'flex',
+              justifyContent: 'space-evenly',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                flexGrow: 1,
+                gap: '20px',
+              }}
+            >
+              <Link to={routes.profile()}>Profile</Link>
+              <Link to={routes.login()}>
+                All Users and Conversations //TODO
+              </Link>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                flexGrow: 1,
+              }}
+            >
+              <Link onClick={logOut} to={routes.login()}>
+                Logout
+              </Link>
+            </div>
+          </div>
         </nav>
       </header>
       <main>{children}</main>

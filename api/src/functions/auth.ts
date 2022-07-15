@@ -102,13 +102,18 @@ export const handler = async (event, context) => {
     //
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
-    handler: ({ username, hashedPassword, salt }) => {
-      return db.user.create({
+    handler: async ({
+      username,
+      hashedPassword,
+      salt,
+      userAttributes,
+    }): Promise<any> => {
+      await db.user.create({
         data: {
           username,
           hashedPassword: hashedPassword,
           salt: salt,
-          // name: userAttributes.name
+          role: userAttributes.role,
         },
       })
     },

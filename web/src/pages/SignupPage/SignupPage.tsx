@@ -9,31 +9,27 @@ import {
   PasswordField,
   FieldError,
   Submit,
+  RadioField,
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast, Toaster } from '@redwoodjs/web/toast'
 
 const SignupPage = () => {
-  const { isAuthenticated, signUp, logOut } = useAuth()
+  const { signUp } = useAuth()
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      logOut()
-      navigate(routes.login())
-    }
-  }, [isAuthenticated])
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     logOut()
+  //     navigate(routes.login())
+  //   }
+  // }, [isAuthenticated])
 
-  // focus on email box on page load
   const usernameRef = useRef<HTMLInputElement>()
   const password = useRef<HTMLInputElement>()
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
-
-  useEffect(() => {
-    console.log(password.current.value)
-  }, [password.current])
 
   const onSubmit = async (data) => {
     const response = await signUp({ ...data })
@@ -44,7 +40,9 @@ const SignupPage = () => {
       toast.error(response.error)
     } else {
       // user is signed in automatically
-      toast.success('Welcome!')
+      navigate(routes.login())
+
+      toast.success('Registered Successfully!')
     }
   }
 
@@ -57,7 +55,7 @@ const SignupPage = () => {
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">
             <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Signup</h2>
+              <h2 className="rw-heading rw-heading-secondary">Register</h2>
             </header>
 
             <div className="rw-segment-main">
@@ -83,6 +81,48 @@ const SignupPage = () => {
                     }}
                   />
                   <FieldError name="username" className="rw-field-error" />
+
+                  <Label
+                    name="role"
+                    className="rw-label"
+                    style={{ marginBottom: '5px' }}
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Role
+                  </Label>
+                  <Label
+                    name="role"
+                    style={{ marginRight: '5px' }}
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    User
+                  </Label>
+                  <RadioField
+                    className="rw-input"
+                    name="role"
+                    value="user"
+                    defaultValue="user"
+                    validation={{
+                      required: {
+                        value: true,
+                        message: 'Role must be selected',
+                      },
+                    }}
+                  ></RadioField>
+                  <Label
+                    name="role"
+                    style={{ marginRight: '5px' }}
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Admin
+                  </Label>
+
+                  <RadioField
+                    value="admin"
+                    className="rw-input"
+                    name="role"
+                  ></RadioField>
+                  <FieldError name="role" className="rw-field-error" />
 
                   <Label
                     name="password"
@@ -148,7 +188,7 @@ const SignupPage = () => {
 
                   <div className="rw-button-group">
                     <Submit className="rw-button rw-button-blue">
-                      Sign Up
+                      Register
                     </Submit>
                   </div>
                 </Form>
