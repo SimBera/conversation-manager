@@ -1,5 +1,7 @@
-import { Link, navigate, routes } from '@redwoodjs/router'
 import { useRef } from 'react'
+import { useEffect } from 'react'
+
+import { useAuth } from '@redwoodjs/auth'
 import {
   Form,
   Label,
@@ -8,25 +10,30 @@ import {
   FieldError,
   Submit,
 } from '@redwoodjs/forms'
-import { useAuth } from '@redwoodjs/auth'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast, Toaster } from '@redwoodjs/web/toast'
-import { useEffect } from 'react'
 
 const SignupPage = () => {
-  const { isAuthenticated, signUp } = useAuth()
+  const { isAuthenticated, signUp, logOut } = useAuth()
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(routes.home())
+      logOut()
+      navigate(routes.login())
     }
   }, [isAuthenticated])
 
   // focus on email box on page load
   const usernameRef = useRef<HTMLInputElement>()
+  const password = useRef<HTMLInputElement>()
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
+
+  useEffect(() => {
+    console.log(password.current.value)
+  }, [password.current])
 
   const onSubmit = async (data) => {
     const response = await signUp({ ...data })
@@ -85,6 +92,7 @@ const SignupPage = () => {
                     Password
                   </Label>
                   <PasswordField
+                    ref={password}
                     name="password"
                     className="rw-input"
                     errorClassName="rw-input rw-input-error"
@@ -94,12 +102,54 @@ const SignupPage = () => {
                         value: true,
                         message: 'Password is required',
                       },
+                      maxLength: {
+                        value: 20,
+                        message: 'Maximum symbol number reached',
+                      },
+                      minLength: {
+                        value: 4,
+                        message: 'Password too short',
+                      },
+                      pattern: {
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,20}$/,
+                        message:
+                          'Password mus contain at least 1 upper case, special symbol',
+                      },
                     }}
                   />
                   <FieldError name="password" className="rw-field-error" />
 
+                  <Label
+                    name="password"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Repeat Password
+                  </Label>
+                  <PasswordField
+                    name="repeat_password"
+                    className="rw-input"
+                    errorClassName="rw-input rw-input-error"
+                    validation={{
+                      validate: (value) =>
+                        value === password.current.value ||
+                        'The passwords do not match',
+                      required: {
+                        value: true,
+                        message: 'You must repeat password',
+                      },
+                    }}
+                  />
+                  <FieldError
+                    name="repeat_password"
+                    className="rw-field-error"
+                  />
+
                   <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Sign Up</Submit>
+                    <Submit className="rw-button rw-button-blue">
+                      Sign Up
+                    </Submit>
                   </div>
                 </Form>
               </div>
