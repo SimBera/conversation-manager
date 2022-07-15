@@ -16,7 +16,7 @@ model User {
   hashedPassword      String
   salt                String
   role                String
-  
+  imageUrl            String?  
   resetToken          String?
   resetTokenExpiresAt DateTime?
 }
