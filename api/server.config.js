@@ -14,6 +14,7 @@
 
 /** @type {import('fastify').FastifyServerOptions} */
 const config = {
+  bodyLimit: 10485760,
   requestTimeout: 15_000,
   logger: {
     level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',

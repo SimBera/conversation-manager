@@ -17,7 +17,6 @@ const Routes = () => {
   return (
     <Router>
       <Set wrap={UsersLayout} private unauthenticated={'login'} roles={['admin']}>
-        <Route path="/admin/users/new" page={UserNewUserPage} name="newUser" />
         <Route path="/admin/profile" page={ProfilePage} name="profile" />
         <Route path="/admin/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
         <Route path="/admin/users/{id:Int}" page={UserUserPage} name="user" />

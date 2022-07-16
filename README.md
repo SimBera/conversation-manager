@@ -39,12 +39,17 @@ When user logs in he is navigated to Profile page☑️
 
 When user logs in Toolbar should show two _??? maybe THREE ????_ more links - `Profile` and `All Users`, `Conversations` ☑️
 
+<img src="./documentation/login.png" alt="login" style="height:300px;"/>
+
 ### Profile
 
-in this page user can change his profile picture
+in this page user can change his profile picture ☑️
 in this page user can change his password ☑️
 In this page user can see his role (admin/regular) ☑️
 in this page user can see his username ☑️
+
+<img src="./documentation/user_profile.png" alt="profile" style="height:300px;"/>
+
 
 ### All users
 
@@ -52,12 +57,18 @@ in this page all users is shown in list ☑️
 each user card should have username, user role, user photo
 when user card is clicked it should navigate to this particular user profile ☑️
 
+<img src="./documentation/all_users.png" alt="all_users" style="height:300px;"/>
+
+
 ### Particular user profile /user/:username ||_kolkas /users/:id_
 
 in this page user info is shown - username, photo, role
 in from this page you can send message to user
 
 if you are admin in this page "Delete user" button should be displayed, when clicked it deletes user with all his info (user messages should stay) ☑️
+
+<img src="./documentation/other_user_profile.png" alt="other_user_profile" style="height:300px;"/>
+
 
 ### Conversations (link should show how many active conversations you have)
 
@@ -67,6 +78,7 @@ user should be able to delete conversation
 in this page you can open one of conversations to send message
 in this page when particular conversation is open, you can choose to block user (when blocked, user can't send messages to you anymore, he gets message "you are blocked by (username who blocked him)")
 When user is blocked each of conversation participants can not send messages anymore
+<img src="./documentation/conversations.png" alt="conversations" style="height:350px;"/>
 
 # Setup
 

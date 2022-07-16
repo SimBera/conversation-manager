@@ -5,6 +5,7 @@ export const schema = gql`
     hashedPassword: String!
     salt: String!
     role: String!
+    imageUrl: String
     resetToken: String
     resetTokenExpiresAt: DateTime
   }
@@ -19,6 +20,7 @@ export const schema = gql`
     hashedPassword: String!
     salt: String!
     role: String!
+    imageUrl: String
     resetToken: String
     resetTokenExpiresAt: DateTime
   }
@@ -28,6 +30,7 @@ export const schema = gql`
     hashedPassword: String
     salt: String
     role: String
+    imageUrl: String
     resetToken: String
     resetTokenExpiresAt: DateTime
   }
