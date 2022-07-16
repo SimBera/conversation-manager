@@ -19,40 +19,32 @@ model User {
   imageUrl            String?
   resetToken          String?
   resetTokenExpiresAt DateTime?
-  conversations       UserConversation[]
+  conversations        UserConversation[]
 }
 
 model UserConversation {
+  id             Int          @id @default(autoincrement())
   user           User         @relation(fields: [userId], references: [id])
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   userId         Int
   conversationId Int
 
-  @@id([userId, conversationId])
+  @@unique([userId, conversationId])
 }
 
 model Conversation {
-  id                     Int                      @id @default(autoincrement())
-  userId                 Int
-  UserConversation       UserConversation[]
-  ConversationChatRecord ConversationChatRecord[]
-}
-
-model ConversationChatRecord {
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
-  chatRecord     ChatRecord   @relation(fields: [chatRecordId], references: [id])
-  conversationId Int
-  chatRecordId   Int
-
-  @@id([chatRecordId, conversationId])
+  id               Int                @id @default(autoincrement())
+  userId           Int
+  UserConversation UserConversation[]
+  ChatRecord       ChatRecord[]
 }
 
 model ChatRecord {
-  id                     Int                      @id @default(autoincrement())
-  sourceId               Int
-  targetId               Int
-  message                String
-  timeStamp              DateTime                 @default(now())
-  conversationId         Int
-  ConversationChatRecord ConversationChatRecord[]
+  id             Int          @id @default(autoincrement())
+  sourceId       Int
+  targetId       Int
+  message        String
+  timeStamp      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId Int
 }

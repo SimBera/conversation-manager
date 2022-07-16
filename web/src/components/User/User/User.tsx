@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { useAuth } from '@redwoodjs/auth'
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
@@ -15,14 +17,39 @@ const DELETE_USER_MUTATION = gql`
   }
 `
 
+export const QUERY_USER = gql`
+  query FindUserById($id: Int!) {
+    user(id: $id) {
+      id
+      username
+      imageUrl
+    }
+  }
+`
+
+// export const CREATE_CONVERSATION = gql`
+//   mutation CreateConversationMutation($userId: Int!) {
+//     createConversation(userId: $userId) {
+//       id
+//       userId
+//     }
+//   }
+// `
+
 const UserProfile = ({ user }) => {
   const { currentUser } = useAuth()
+  // const [createConversation] = useMutation(CREATE_CONVERSATION, {
+  //   variables: { userId: user.id },
+  // })
+
+  const handleOnclick = () => {
+    createConversation()
+    navigate(routes.conversations())
+  }
 
   return (
     <>
-      <button onClick={() => console.log('//TODO navigate to conversation')}> 
-        Send message
-      </button>
+      <button onClick={handleOnclick}>Send message</button>
       <UserCard user={user}></UserCard>
       {currentUser.role === 'admin' && <AdminUserActions user={user} />}
     </>
