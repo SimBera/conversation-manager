@@ -20,7 +20,7 @@ const UserProfile = ({ user }) => {
 
   return (
     <>
-      <button onClick={() => console.log('//TODO navigate to conversation')}>
+      <button onClick={() => console.log('//TODO navigate to conversation')}> 
         Send message
       </button>
       <UserCard user={user}></UserCard>
@@ -41,7 +41,9 @@ const AdminUserActions = ({ user }: AdminUserActionsProps) => {
   })
 
   const onDeleteClick = (id) => {
-    if (confirm('Are you sure you want to delete user ' + id + '?')) {
+    if (
+      confirm('Are you sure you want to delete user ' + user.username + '?')
+    ) {
       deleteUser({ variables: { id } })
     }
   }

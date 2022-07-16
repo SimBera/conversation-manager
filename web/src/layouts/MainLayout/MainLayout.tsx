@@ -29,7 +29,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             >
               <Link to={routes.profile()}>Profile</Link>
               <Link to={routes.users()}>All Users </Link>
-              <Link to={routes.login()}>Conversations //TODO</Link>
+              <Link to={routes.conversations()}>Conversations</Link>
             </div>
             <div
               style={{

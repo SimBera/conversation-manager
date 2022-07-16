@@ -95,12 +95,12 @@ const SignupPage = () => {
                     style={{ marginRight: '5px' }}
                     errorClassName="rw-label rw-label-error"
                   >
-                    User
+                    Regular
                   </Label>
                   <RadioField
                     className="rw-input"
                     name="role"
-                    value="user"
+                    value="regular"
                     defaultValue="user"
                     validation={{
                       required: {
