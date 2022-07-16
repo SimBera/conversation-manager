@@ -20,16 +20,14 @@ export const QUERY = gql`
     }
   }
 `
-const UPDATE_USER_MUTATION = gql`
+export const UPDATE_USER_MUTATION = gql`
   mutation UpdateUserMutation($id: Int!, $input: UpdateUserInput!) {
     updateUser(id: $id, input: $input) {
       id
       username
-      hashedPassword
-      salt
       role
+      imageUrl
       resetToken
-      resetTokenExpiresAt
     }
   }
 `

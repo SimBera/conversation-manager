@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useAuth } from '@redwoodjs/auth'
 import { FieldError, FileField, Form, Label, Submit } from '@redwoodjs/forms'
-import { useMutation } from '@redwoodjs/web'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import { RequestResetSegment } from 'src/components/Profile/RequestReset'
 import { ResetPasswordSegment } from 'src/components/Profile/ResetPasswordSegment'
-
-const UPDATE_USER_MUTATION = gql`
-  mutation UpdateUserMutation($id: Int!, $input: UpdateUserInput!) {
-    updateUser(id: $id, input: $input) {
-      id
-      imageUrl
-    }
-  }
-`
+import { UPDATE_USER_MUTATION } from 'src/components/User/EditUserCell'
+import { QUERY } from 'src/components/User/UserCell'
 
 const ProfilePage = () => {
   const { currentUser } = useAuth()
   const [resetToken, setResetToken] = useState(null)
   const [img, setImg] = useState('male-placeholder-image.jpeg')
+
+  const query = useQuery(QUERY, {
+    onCompleted: () => setImg(query.data.user.imageUrl),
+    variables: { id: currentUser.id },
+  })
 
   const [updateUser, { loading }] = useMutation(UPDATE_USER_MUTATION, {
     onCompleted: () => {
@@ -47,10 +45,6 @@ const ProfilePage = () => {
     })
     reader.readAsDataURL(data.profileImage[0])
   }
-
-  useEffect(() => {
-    setImg(img)
-  }, [])
 
   return (
     <>

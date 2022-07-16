@@ -54,7 +54,7 @@ in this page user can see his username ☑️
 ### All users
 
 in this page all users is shown in list ☑️
-each user card should have username, user role, user photo
+each user card should have username, user role, user photo ☑️
 when user card is clicked it should navigate to this particular user profile ☑️
 
 <img src="./documentation/all_users.png" alt="all_users" style="height:300px;"/>

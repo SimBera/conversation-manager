@@ -9,11 +9,9 @@ export const QUERY = gql`
     user: user(id: $id) {
       id
       username
-      hashedPassword
-      salt
       role
+      imageUrl
       resetToken
-      resetTokenExpiresAt
     }
   }
 `
