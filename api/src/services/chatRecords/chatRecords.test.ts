@@ -29,30 +29,30 @@ describe('chatRecords', () => {
     }
   )
 
-  scenario('creates a chatRecord', async () => {
+  scenario('creates a chatRecord', async (scenario: StandardScenario) => {
     const result = await createChatRecord({
       input: {
-        sourceId: 3348687,
-        targetId: 7107113,
+        createdById: scenario.chatRecord.two.createdById,
         message: 'String',
-        conversationId: 1359025,
+        conversationId: scenario.chatRecord.two.conversationId,
       },
     })
 
-    expect(result.sourceId).toEqual(3348687)
-    expect(result.targetId).toEqual(7107113)
+    expect(result.createdById).toEqual(scenario.chatRecord.two.createdById)
     expect(result.message).toEqual('String')
-    expect(result.conversationId).toEqual(1359025)
+    expect(result.conversationId).toEqual(
+      scenario.chatRecord.two.conversationId
+    )
   })
 
   scenario('updates a chatRecord', async (scenario: StandardScenario) => {
     const original = await chatRecord({ id: scenario.chatRecord.one.id })
     const result = await updateChatRecord({
       id: original.id,
-      input: { sourceId: 4400789 },
+      input: { message: 'String2' },
     })
 
-    expect(result.sourceId).toEqual(4400789)
+    expect(result.message).toEqual('String2')
   })
 
   scenario('deletes a chatRecord', async (scenario: StandardScenario) => {

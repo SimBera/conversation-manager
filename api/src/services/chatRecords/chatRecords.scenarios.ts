@@ -4,18 +4,30 @@ export const standard = defineScenario<Prisma.ChatRecordCreateArgs>({
   chatRecord: {
     one: {
       data: {
-        sourceId: 372554,
-        targetId: 2863319,
         message: 'String',
-        conversationId: 6511959,
+        createdBy: {
+          create: {
+            username: 'String5616542',
+            hashedPassword: 'String',
+            salt: 'String',
+            role: 'String',
+          },
+        },
+        conversation: { create: {} },
       },
     },
     two: {
       data: {
-        sourceId: 5018842,
-        targetId: 8738456,
         message: 'String',
-        conversationId: 2359347,
+        createdBy: {
+          create: {
+            username: 'String3741445',
+            hashedPassword: 'String',
+            salt: 'String',
+            role: 'String',
+          },
+        },
+        conversation: { create: {} },
       },
     },
   },

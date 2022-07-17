@@ -11,40 +11,45 @@ generator client {
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
 // to create migrations for them and apply to your dev DB.
 model User {
-  id                  Int                @id @unique @default(autoincrement())
-  username            String             @unique
+  id                  Int       @id @unique @default(autoincrement())
+  username            String    @unique
   hashedPassword      String
   salt                String
   role                String
   imageUrl            String?
   resetToken          String?
   resetTokenExpiresAt DateTime?
-  conversations        UserConversation[]
-}
 
-model UserConversation {
-  id             Int          @id @default(autoincrement())
-  user           User         @relation(fields: [userId], references: [id])
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
-  userId         Int
-  conversationId Int
-
-  @@unique([userId, conversationId])
-}
-
-model Conversation {
-  id               Int                @id @default(autoincrement())
-  userId           Int
   UserConversation UserConversation[]
   ChatRecord       ChatRecord[]
 }
 
-model ChatRecord {
-  id             Int          @id @default(autoincrement())
-  sourceId       Int
-  targetId       Int
-  message        String
-  timeStamp      DateTime     @default(now())
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+model Conversation {
+  id Int @id @default(autoincrement())
+
+  UserConversation UserConversation[]
+  ChatRecord       ChatRecord[]
+}
+
+model UserConversation {
+  id             Int @id @default(autoincrement())
+  userId         Int
   conversationId Int
+
+  user         User         @relation(fields: [userId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
+  @@unique([userId, conversationId])
+}
+
+model ChatRecord {
+  id             Int      @id @default(autoincrement())
+  createdBy      User     @relation(fields: [createdById], references: [id])
+  createdById    Int
+  message        String
+  timeStamp      DateTime @default(now())
+  conversationId Int
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
 }

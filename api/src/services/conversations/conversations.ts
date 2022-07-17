@@ -1,4 +1,8 @@
-import type { QueryResolvers, MutationResolvers } from 'types/graphql'
+import type {
+  QueryResolvers,
+  MutationResolvers,
+  ConversationResolvers,
+} from 'types/graphql'
 
 import { db } from 'src/lib/db'
 
@@ -36,4 +40,11 @@ export const deleteConversation: MutationResolvers['deleteConversation'] = ({
   return db.conversation.delete({
     where: { id },
   })
+}
+
+export const Conversation: ConversationResolvers = {
+  UserConversation: (_obj, { root }) =>
+    db.conversation.findUnique({ where: { id: root.id } }).UserConversation(),
+  ChatRecord: (_obj, { root }) =>
+    db.conversation.findUnique({ where: { id: root.id } }).ChatRecord(),
 }

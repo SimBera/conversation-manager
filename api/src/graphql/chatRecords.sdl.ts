@@ -1,11 +1,12 @@
 export const schema = gql`
   type ChatRecord {
     id: Int!
-    sourceId: Int!
-    targetId: Int!
+    createdBy: User!
+    createdById: Int!
     message: String!
     timeStamp: DateTime!
     conversationId: Int!
+    conversation: Conversation!
   }
 
   type Query {
@@ -14,16 +15,14 @@ export const schema = gql`
   }
 
   input CreateChatRecordInput {
-    sourceId: Int!
-    targetId: Int!
+    createdById: Int!
     message: String!
     timeStamp: DateTime!
     conversationId: Int!
   }
 
   input UpdateChatRecordInput {
-    sourceId: Int
-    targetId: Int
+    createdById: Int
     message: String
     timeStamp: DateTime
     conversationId: Int

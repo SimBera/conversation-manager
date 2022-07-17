@@ -29,24 +29,6 @@ describe('conversations', () => {
     }
   )
 
-  scenario('creates a conversation', async () => {
-    const result = await createConversation({
-      input: { userId: 1190981 },
-    })
-
-    expect(result.userId).toEqual(1190981)
-  })
-
-  scenario('updates a conversation', async (scenario: StandardScenario) => {
-    const original = await conversation({ id: scenario.conversation.one.id })
-    const result = await updateConversation({
-      id: original.id,
-      input: { userId: 7898590 },
-    })
-
-    expect(result.userId).toEqual(7898590)
-  })
-
   scenario('deletes a conversation', async (scenario: StandardScenario) => {
     const original = await deleteConversation({
       id: scenario.conversation.one.id,

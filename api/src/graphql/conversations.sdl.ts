@@ -1,7 +1,8 @@
 export const schema = gql`
   type Conversation {
     id: Int!
-    userId: Int!
+    UserConversation: [UserConversation]!
+    ChatRecord: [ChatRecord]!
   }
 
   type Query {
@@ -10,20 +11,16 @@ export const schema = gql`
   }
 
   input CreateConversationInput {
-    userId: Int!
+    
   }
 
   input UpdateConversationInput {
-    userId: Int
+    
   }
 
   type Mutation {
-    createConversation(input: CreateConversationInput!): Conversation!
-      @requireAuth
-    updateConversation(
-      id: Int!
-      input: UpdateConversationInput!
-    ): Conversation! @requireAuth
+    createConversation(input: CreateConversationInput!): Conversation! @requireAuth
+    updateConversation(id: Int!, input: UpdateConversationInput!): Conversation! @requireAuth
     deleteConversation(id: Int!): Conversation! @requireAuth
   }
 `

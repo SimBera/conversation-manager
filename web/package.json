@@ -13,12 +13,20 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.0",
+    "@mui/styled-engine-sc": "^5.8.0",
     "@redwoodjs/auth": "2.1.0",
     "@redwoodjs/forms": "2.1.0",
     "@redwoodjs/router": "2.1.0",
     "@redwoodjs/web": "2.1.0",
+    "add": "^2.0.6",
     "prop-types": "15.8.1",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "styled-components": "^5.3.5",
+    "yarn": "^1.22.19"
   }
 }
