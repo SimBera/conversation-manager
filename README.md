@@ -89,14 +89,17 @@ Page in which user are registered.
 ## Prerequisites
 `yarn`
 # Setup
+```
 `yarn` <- install packages and builds framework
 `yarn rw prisma migrate dev` <- creates tables and database, props for migration name _(can be any string)_
 `yarn rw dev` <- runs the framework
+```
 
 ## .env file example
-
+```
 DATABASE_URL=file:./dev.db
 TEST_DATABASE_URL=file:./.redwood/test.db
 PRISMA_HIDE_UPDATE_MESSAGE=true
 LOG_LEVEL=trace
 SESSION_SECRET=zffzjCEfwm9tkfdBrsQGwS4VtfDjrpcghV4tWTmAAY8Pxt5DG3kFSTZfF8oH49Km
+```
