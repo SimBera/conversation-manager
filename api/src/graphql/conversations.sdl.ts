@@ -20,8 +20,7 @@ export const schema = gql`
   }
 
   type Mutation {
-    createConversation(input: CreateConversationInput!): Conversation!
-      @skipAuth
+    createConversation(input: CreateConversationInput!): Conversation! @skipAuth
     updateConversation(
       id: Int!
       input: UpdateConversationInput!

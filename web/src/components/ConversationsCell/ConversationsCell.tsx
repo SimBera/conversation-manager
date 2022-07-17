@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import SendIcon from '@mui/icons-material/Send'
 import {
@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import type { ConversationsQuery } from 'types/graphql'
 
+import { useAuth } from '@redwoodjs/auth'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import ConversationCell from '../ConversationCell'
@@ -31,9 +32,12 @@ export const QUERY = gql`
   }
 `
 export const CREATE_CONVERSATION = gql`
-  mutation CreateConversationMutation($userId: Int!) {
-    createConversation(userId: $userId) {
-      title
+  mutation CreateConversationMutation($input: CreateConversationInput!) {
+    createConversation(input: $input) {
+      id
+      UserConversation {
+        userId
+      }
     }
   }
 `
@@ -49,33 +53,47 @@ export const Failure = ({ error }: CellFailureProps) => (
 export const Success = ({
   conversations,
 }: CellSuccessProps<ConversationsQuery>) => {
+  const { currentUser } = useAuth()
   const [selectedConversation, setSelectedConversation] = useState(undefined)
+  const [yourConversations, setYourConversations] = useState([])
+
+  useEffect(() => {
+    const conversationsFiltered = conversations.filter(
+      (conv) =>
+        conv.UserConversation.filter(
+          (userconv) => userconv.userId === currentUser.id
+        ).length
+    )
+
+    setYourConversations(conversationsFiltered)
+  }, [conversations])
 
   return (
     <Box sx={{ width: '100%' }}>
       <Grid container>
         <Grid item xs={4}>
           <List>
-            {conversations.map((conversation) => {
-              return (
-                <ListItem
-                  onClick={() => setSelectedConversation(conversation)}
-                  key={conversation.id}
-                >
-                  <ListItemButton>
-                    <ListItemAvatar>
-                      <Avatar alt="username" />
-                    </ListItemAvatar>
-                    <Typography>
-                      {conversation.id} {conversation.title}
-                    </Typography>
-                    <ListItemIcon>
-                      <SendIcon sx={{ paddingLeft: 2 }} />
-                    </ListItemIcon>
-                  </ListItemButton>
-                </ListItem>
-              )
-            })}
+            {yourConversations &&
+              yourConversations.map((conversation) => {
+                return (
+                  <ListItem
+                    onClick={() => setSelectedConversation(conversation)}
+                    key={conversation.id}
+                  >
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <Avatar alt="username" />
+                      </ListItemAvatar>
+                      <Typography>
+                        {conversation.id} {conversation.title}
+                      </Typography>
+                      <ListItemIcon>
+                        <SendIcon sx={{ paddingLeft: 2 }} />
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </ListItem>
+                )
+              })}
           </List>
         </Grid>
         <Grid item xs={8}>

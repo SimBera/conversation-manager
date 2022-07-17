@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import SendIcon from '@mui/icons-material/Send'
 import {
@@ -18,7 +18,7 @@ import type {
 } from 'types/graphql'
 
 import { useAuth } from '@redwoodjs/auth'
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import { CellSuccessProps, CellFailureProps, useMutation } from '@redwoodjs/web'
 
 import CharRecordsCell from '../ChatRecordsCell'
 
@@ -38,6 +38,20 @@ export const QUERY = gql`
   }
 `
 
+export const CREATE_RECORD = gql`
+  mutation CreatRecord($input: CreateChatRecordInput!) {
+    createChatRecord(input: $input) {
+      id
+      message
+      timeStamp
+      createdBy {
+        id
+        username
+      }
+    }
+  }
+`
+
 export const Loading = () => <div>Loading...</div>
 
 export const Empty = () => <div>Empty</div>
@@ -52,25 +66,38 @@ export const Success = ({
   conversation,
 }: CellSuccessProps<FindConversationQuery, FindConversationQueryVariables>) => {
   const { currentUser } = useAuth()
-  useEffect(() => {
-    const guest = (conversation as any).UserConversation.find(
-      (uConv) => uConv.userId !== currentUser.id
-    ).user
-    console.log(guest)
-  }, [conversation])
+  const [createChatRecord, { data }] = useMutation(CREATE_RECORD)
+  const [message, setMessage] = useState('asd')
+
+  const onFieldChange = (data) => {
+    setMessage(data.nativeEvent.target.value)
+  }
+
+  const onButtonClick = () => {
+    createChatRecord({
+      variables: {
+        input: {
+          createdById: currentUser.id,
+          message: message,
+          timeStamp: new Date(),
+          conversationId: conversation.id,
+        },
+      },
+    })
+  }
 
   return (
     <>
-      <Paper elevation={3}>
+      <Paper elevation={3} sx={{ padding: 2, marginTop: 2 }}>
         <List
           sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
         >
-          <CharRecordsCell></CharRecordsCell>
+          <CharRecordsCell conversation={conversation}></CharRecordsCell>
         </List>
         <Paper>
-          <TextField sx={{ width: '80%' }}></TextField>
-          <IconButton aria-label="comment">
-            <SendIcon sx={{ paddingLeft: 2 }} />
+          <TextField onChange={onFieldChange} sx={{ width: '94%' }}></TextField>
+          <IconButton onClick={onButtonClick} aria-label="comment">
+            <SendIcon fontSize="large" />
           </IconButton>
         </Paper>
       </Paper>

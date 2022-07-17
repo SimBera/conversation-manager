@@ -40,7 +40,6 @@ const ProfilePage = () => {
       toast.success('Image updated')
     },
     onError: (error) => {
-      console.log(error)
       toast.error(error.message)
     },
   })
@@ -55,8 +54,6 @@ const ProfilePage = () => {
           input: { imageUrl: reader.result as string },
         },
       })
-      console.log(data.updateUser)
-
       setImg(data.updateUser.imageUrl)
     })
     reader.readAsDataURL(file)

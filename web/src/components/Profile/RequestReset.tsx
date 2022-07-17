@@ -9,7 +9,6 @@ export const RequestResetSegment = ({ setResetToken }) => {
 
   const onSubmit = async () => {
     const response = await forgotPassword(currentUser.username)
-    console.log(response)
     if (response.error) {
       toast.error(response.error)
     } else {

@@ -10,8 +10,8 @@ export const schema = gql`
   }
 
   type Query {
-    chatRecords: [ChatRecord!]! @requireAuth
-    chatRecord(id: Int!): ChatRecord @requireAuth
+    chatRecords: [ChatRecord!]! @skipAuth
+    chatRecord(id: Int!): ChatRecord @skipAuth
   }
 
   input CreateChatRecordInput {
@@ -29,9 +29,9 @@ export const schema = gql`
   }
 
   type Mutation {
-    createChatRecord(input: CreateChatRecordInput!): ChatRecord! @requireAuth
+    createChatRecord(input: CreateChatRecordInput!): ChatRecord! @skipAuth
     updateChatRecord(id: Int!, input: UpdateChatRecordInput!): ChatRecord!
-      @requireAuth
-    deleteChatRecord(id: Int!): ChatRecord! @requireAuth
+      @skipAuth
+    deleteChatRecord(id: Int!): ChatRecord! @skipAuth
   }
 `

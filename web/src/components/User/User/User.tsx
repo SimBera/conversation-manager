@@ -29,33 +29,62 @@ export const QUERY_USER = gql`
   }
 `
 
+export const CREATE_USER_CONVERSATION = gql`
+  mutation CreateUserConversation($input: CreateUserConversationInput!) {
+    createUserConversation(input: $input) {
+      id
+      userId
+      conversationId
+    }
+  }
+`
+
 const User = ({ user }) => {
   const { currentUser } = useAuth()
-  const [createConversation, { loading }] = useMutation(CREATE_CONVERSATION, {
-    variables: { userId: user.id },
-  })
-  const { data } = useQuery(QUERY, {
-    onComplete: () => console.log(data),
-  })
+  const [createConversation, { loading }] = useMutation(CREATE_CONVERSATION)
+  const { data } = useQuery(QUERY, )
+
+  const [createUserConversation] = useMutation(CREATE_USER_CONVERSATION)
 
   const handleOnclick = async () => {
     if (data && data.conversations) {
-      // console.log(data)
       const hasConversation = data.conversations.filter((conversation) => {
         conversation.UserConversation.some(
           (conv) => conv.userId === currentUser.id
         )
       })
-      console.log(hasConversation)
     }
 
-    // const response = await createConversation()
-    // if (response.data) {
-    //   await createConversation({
-    //     variables: { id: response.data.id, userId: user.id },
-    //   })
-    //   navigate(routes.conversations())
-    // }
+    const response = await createConversation({
+      variables: {
+        input: {
+          title: `chat with: ${user.username} and  ${currentUser.username}`,
+        },
+      },
+    })
+
+    await createUserConversation({
+      variables: {
+        input: {
+          conversationId: response.data.createConversation.id,
+          userId: user.id,
+        },
+      },
+    })
+
+    await createUserConversation({
+      variables: {
+        input: {
+          conversationId: response.data.createConversation.id,
+          userId: currentUser.id,
+        },
+      },
+    })
+
+    if (response.data) {
+      const id = response.data.id
+      navigate(routes.conversations({ conversationId: id }))
+    }
   }
 
   return (

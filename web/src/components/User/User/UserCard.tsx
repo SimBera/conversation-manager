@@ -11,7 +11,7 @@ export const UserCard = ({ user, onClick }: UserCartProps) => {
           sx={{ maxWidth: 400 }}
           component="img"
           height="300"
-          image={user.imageUrl}
+          image={user.imageUrl || 'male-placeholder-image.jpeg'}
           alt="profilePicture"
         />
         <CardContent>

@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import {
   ListItem,
@@ -11,7 +11,7 @@ import {
 import type { ChatRecordsQuery } from 'types/graphql'
 
 import { useAuth } from '@redwoodjs/auth'
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import { CellSuccessProps, CellFailureProps, useQuery } from '@redwoodjs/web'
 
 export const QUERY = gql`
   query ChatRecordsQuery {
@@ -19,6 +19,7 @@ export const QUERY = gql`
       id
       timeStamp
       message
+      conversationId
       createdBy {
         imageUrl
         username
@@ -37,42 +38,55 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({
   chatRecords,
+  conversation,
 }: CellSuccessProps<ChatRecordsQuery>) => {
   const { currentUser } = useAuth()
+  const [records, setRecords] = useState(chatRecords)
+
+  const { data } = useQuery(QUERY, { pollInterval: 50 })
+
+  useEffect(() => {
+    const filterd = data.chatRecords.filter(
+      (record) => record.conversationId === conversation.id
+    )
+    setRecords(filterd)
+  }, [data])
+
   return (
     <>
-      {chatRecords.map((item) => {
-        return (
-          <ListItem
-            key={item.id}
-            alignItems={
-              currentUser.id === item.createdBy.id ? 'flex-start' : 'center'
-            }
-          >
-            <ListItemAvatar>
-              <Avatar
-                alt="Remy Sharp"
-                src={item.imageUrl || './male-placeholder-image'}
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={item.createdBy.username}
-              secondary={
-                <Fragment>
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {item.message}
-                  </Typography>
-                </Fragment>
+      {records &&
+        records.map((item) => {
+          return (
+            <ListItem
+              key={item.id}
+              alignItems={
+                currentUser.id === item.createdBy.id ? 'flex-start' : 'center'
               }
-            />
-          </ListItem>
-        )
-      })}
+            >
+              <ListItemAvatar>
+                <Avatar
+                  alt="Remy Sharp"
+                  src={item.imageUrl || './male-placeholder-image'}
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={item.createdBy.username}
+                secondary={
+                  <Fragment>
+                    <Typography
+                      sx={{ display: 'inline' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {item.message}
+                    </Typography>
+                  </Fragment>
+                }
+              />
+            </ListItem>
+          )
+        })}
     </>
   )
 }
