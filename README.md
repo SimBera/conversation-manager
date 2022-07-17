@@ -89,9 +89,9 @@ Page in which user are registered.
 ## Prerequisites
 `yarn`
 # Setup
-`yarn`
-`yarn rw prisma migrate`
-`yarn rw dev`
+`yarn` <- install packages and builds framework
+`yarn rw prisma migrate dev` <- creates tables and database, props for migration name _(can be any string)_
+`yarn rw dev` <- runs the framework
 
 ## .env file example
 
