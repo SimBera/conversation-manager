@@ -1,21 +1,19 @@
 import type { ConversationsQuery } from 'types/graphql'
 
-import { CellSuccessProps, CellFailureProps, useQuery } from '@redwoodjs/web'
-
-import { QUERY_USER } from '../User/User/User'
+import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 export const QUERY = gql`
   query ConversationsQuery {
     conversations {
       id
-      userId
+      title
     }
   }
 `
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <div>No Conversations Found</div>
+export const Empty = () => <div>Empty</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error.message}</div>
@@ -27,15 +25,8 @@ export const Success = ({
   return (
     <ul>
       {conversations.map((item) => {
-        return (
-          <li key={item.id}>
-            <ConversationSelectBox userId={item.userId} />
-          </li>
-        )
+        return <li key={item.id}>{JSON.stringify(item)}</li>
       })}
     </ul>
   )
 }
-
-
-

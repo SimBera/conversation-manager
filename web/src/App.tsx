@@ -14,15 +14,15 @@ const theme = createTheme()
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
-    <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-      <AuthProvider type="dbAuth">
-        <RedwoodApolloProvider>
-          <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
+        <AuthProvider type="dbAuth">
+          <RedwoodApolloProvider>
             <Routes />
-          </ThemeProvider>
-        </RedwoodApolloProvider>
-      </AuthProvider>
-    </RedwoodProvider>
+          </RedwoodApolloProvider>
+        </AuthProvider>
+      </RedwoodProvider>
+    </ThemeProvider>
   </FatalErrorBoundary>
 )
 

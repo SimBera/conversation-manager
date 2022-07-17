@@ -16,7 +16,6 @@ import MainLayout from './layouts/MainLayout/MainLayout'
 const Routes = () => {
   return (
     <Router>
-      <Route path="/conversations" page={ConversationsPage} name="conversations" />
       <Set wrap={UsersLayout} private unauthenticated={'login'} roles={['admin']}>
         <Route path="/admin/profile" page={ProfilePage} name="profile" />
         <Route path="/admin/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
@@ -28,6 +27,7 @@ const Routes = () => {
         <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
         <Route path="/users/{id:Int}" page={UserUserPage} name="user" />
         <Route path="/users" page={UserUsersPage} name="users" />
+        <Route path="/conversations" page={ConversationsPage} name="conversations" />
       </Set>
       <Route path="/" page={LoginPage} name="login" />
       <Route path="/register" page={SignupPage} name="signup" />

@@ -1,4 +1,18 @@
-import { useState } from 'react'
+import { ChangeEvent, ChangeEventHandler, useState } from 'react'
+
+import { PhotoCamera } from '@mui/icons-material'
+import {
+  Box,
+  Button,
+  Card,
+  CardMedia,
+  Container,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
 import { FieldError, FileField, Form, Label, Submit } from '@redwoodjs/forms'
@@ -11,7 +25,7 @@ import { UPDATE_USER_MUTATION } from 'src/components/User/EditUserCell'
 import { QUERY } from 'src/components/User/UserCell'
 
 const ProfilePage = () => {
-  const { currentUser } = useAuth()
+  const { currentUser, getCurrentUser } = useAuth()
   const [resetToken, setResetToken] = useState(null)
   const [img, setImg] = useState('male-placeholder-image.jpeg')
 
@@ -22,6 +36,7 @@ const ProfilePage = () => {
 
   const [updateUser, { loading }] = useMutation(UPDATE_USER_MUTATION, {
     onCompleted: () => {
+      getCurrentUser()
       toast.success('Image updated')
     },
     onError: (error) => {
@@ -30,7 +45,8 @@ const ProfilePage = () => {
     },
   })
 
-  const onSubmit = (data) => {
+  const uploadPhoto = (input: ChangeEvent<HTMLInputElement>) => {
+    const file = input.target.files[0]
     const reader = new FileReader()
     reader.addEventListener('load', async () => {
       const { data } = await updateUser({
@@ -43,45 +59,62 @@ const ProfilePage = () => {
 
       setImg(data.updateUser.imageUrl)
     })
-    reader.readAsDataURL(data.profileImage[0])
+    reader.readAsDataURL(file)
   }
 
   return (
-    <>
-      {loading ? (
-        <LoadingSegment />
-      ) : (
-        <img src={img} alt="profile_picture" height={'300px'} />
-      )}
-      <br />
-      UserName: {currentUser.username}
-      <br />
-      Role {currentUser.role}
-      <br />
-      <Form onSubmit={onSubmit} className="rw-form-wrapper">
-        <Label
-          name="password"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Select image
-        </Label>
-
-        <FileField
-          accept="image/*"
-          className="rw-button rw-button-blue"
-          name="profileImage"
-        />
-        <FieldError name="profileImage" className="rw-field-error" />
-
-        <Submit className="rw-button rw-button-blue">Upload image</Submit>
-      </Form>
-      {resetToken ? (
-        <ResetPasswordSegment resetToken={resetToken} />
-      ) : (
-        <RequestResetSegment setResetToken={setResetToken} />
-      )}
-    </>
+    <Container sx={{ padding: 2 }}>
+      <Paper
+        color="inherit"
+        elevation={3}
+        sx={{ width: 1200, height: 600, padding: 2 }}
+      >
+        {loading ? (
+          <LoadingSegment />
+        ) : (
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container>
+              <Grid item xs={5}>
+                <Box
+                  sx={{ maxWidth: 400, maxHeight: 400 }}
+                  component="img"
+                  src={img || 'male-placeholder-image.jpeg'}
+                  alt="profile_picture"
+                ></Box>
+              </Grid>
+              <Grid item xs={5}>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Button variant="contained" component="label">
+                      <PhotoCamera />
+                      <Typography>Upload</Typography>
+                      <input
+                        onChange={uploadPhoto}
+                        hidden
+                        accept="image/*"
+                        multiple
+                        type="file"
+                      />
+                    </Button>
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Typography> Username: {currentUser.username}</Typography>
+                    <Typography> Role: {currentUser.role}</Typography>
+                  </Grid>
+                  <Grid item xs={5}>
+                    {resetToken ? (
+                      <ResetPasswordSegment resetToken={resetToken} />
+                    ) : (
+                      <RequestResetSegment setResetToken={setResetToken} />
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+      </Paper>
+    </Container>
   )
 }
 

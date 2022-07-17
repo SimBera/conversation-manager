@@ -18,7 +18,7 @@ const DELETE_USER_MUTATION = gql`
 `
 
 export const QUERY_USER = gql`
-  query FindUserById($id: Int!) {
+  query getUser($id: Int!) {
     user(id: $id) {
       id
       username
@@ -43,7 +43,7 @@ const UserProfile = ({ user }) => {
   // })
 
   const handleOnclick = () => {
-    createConversation()
+    // createConversation()
     navigate(routes.conversations())
   }
 

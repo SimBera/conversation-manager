@@ -1,13 +1,12 @@
 import type { Prisma } from '@prisma/client'
 
-export const standard = defineScenario<Prisma.ChatRecordCreateArgs>({
-  chatRecord: {
+export const standard = defineScenario<Prisma.UserConversationCreateArgs>({
+  userConversation: {
     one: {
       data: {
-        message: 'String',
-        createdBy: {
+        user: {
           create: {
-            username: 'String5099755',
+            username: 'String613046',
             hashedPassword: 'String',
             salt: 'String',
             role: 'String',
@@ -18,10 +17,9 @@ export const standard = defineScenario<Prisma.ChatRecordCreateArgs>({
     },
     two: {
       data: {
-        message: 'String',
-        createdBy: {
+        user: {
           create: {
-            username: 'String1698086',
+            username: 'String9686468',
             hashedPassword: 'String',
             salt: 'String',
             role: 'String',
