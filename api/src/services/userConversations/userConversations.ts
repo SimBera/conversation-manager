@@ -40,6 +40,12 @@ export const deleteUserConversation: MutationResolvers['deleteUserConversation']
     })
   }
 
+export const findConversationByUserPair = ({ userId1, uerId2 }) => {
+  return db.userConversation.findMany({
+    where: { OR: [{ userId: userId1 }, { userId: uerId2 }] },
+  })
+}
+
 export const UserConversation: UserConversationResolvers = {
   user: (_obj, { root }) =>
     db.userConversation.findUnique({ where: { id: root.id } }).user(),

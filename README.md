@@ -86,10 +86,17 @@ Page in which user are registered.
 
 <img src="./documentation/conversations.png" alt="conversations" style="height:350px;"/>
 
+## Prerequisites
+`yarn`
 # Setup
-
 `yarn`
 `yarn rw prisma migrate`
 `yarn rw dev`
 
-env file example
+## .env file example
+
+DATABASE_URL=file:./dev.db
+TEST_DATABASE_URL=file:./.redwood/test.db
+PRISMA_HIDE_UPDATE_MESSAGE=true
+LOG_LEVEL=trace
+SESSION_SECRET=zffzjCEfwm9tkfdBrsQGwS4VtfDjrpcghV4tWTmAAY8Pxt5DG3kFSTZfF8oH49Km

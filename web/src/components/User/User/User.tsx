@@ -1,11 +1,13 @@
-import { useEffect } from 'react'
+import { Button, Grid, Typography } from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { User } from '../../../../types/graphql'
+import { CREATE_CONVERSATION } from 'src/components/ConversationsCell'
+
+import { User as IUser } from '../../../../types/graphql'
 
 import { UserCard } from './UserCard'
 
@@ -27,31 +29,35 @@ export const QUERY_USER = gql`
   }
 `
 
-// export const CREATE_CONVERSATION = gql`
-//   mutation CreateConversationMutation($userId: Int!) {
-//     createConversation(userId: $userId) {
-//       id
-//       userId
-//     }
-//   }
-// `
-
-const UserProfile = ({ user }) => {
+const User = ({ user }) => {
   const { currentUser } = useAuth()
-  // const [createConversation] = useMutation(CREATE_CONVERSATION, {
+  // const [createConversation, { loading }] = useMutation(CREATE_CONVERSATION, {
   //   variables: { userId: user.id },
   // })
 
-  const handleOnclick = () => {
-    // createConversation()
+  const handleOnclick = async () => {
+    // const response = await createConversation()
+    // if (response.data) {
+    //   await createConversation({
+    //     variables: { id: response.data.id, userId: user.id },
+    //   })
     navigate(routes.conversations())
+    // }
   }
 
   return (
     <>
-      <button onClick={handleOnclick}>Send message</button>
       <UserCard user={user}></UserCard>
-      {currentUser.role === 'admin' && <AdminUserActions user={user} />}
+      <Grid container>
+        <Grid item>
+          <Button variant="contained" onClick={handleOnclick}>
+            <Typography>Send message</Typography>
+          </Button>
+        </Grid>
+        <Grid item>
+          {currentUser.role === 'admin' && <AdminUserActions user={user} />}
+        </Grid>
+      </Grid>
     </>
   )
 }
@@ -75,26 +81,29 @@ const AdminUserActions = ({ user }: AdminUserActionsProps) => {
     }
   }
   return (
-    <nav className="rw-button-group">
-      <Link
+    <>
+      <Button
+        variant="outlined"
+        component={Link}
         to={routes.editUser({ id: user.id })}
-        className="rw-button rw-button-blue"
       >
         Edit
-      </Link>
-      <button
+      </Button>
+      <Button
         type="button"
-        className="rw-button rw-button-red"
+        variant="contained"
+        color="error"
+        className="rw-button-red"
         onClick={() => onDeleteClick(user.id)}
       >
-        Delete
-      </button>
-    </nav>
+        <Typography>Delete</Typography>
+      </Button>
+    </>
   )
 }
 
 interface AdminUserActionsProps {
-  user: User
+  user: IUser
 }
 
-export default UserProfile
+export default User

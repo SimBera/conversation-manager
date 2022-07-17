@@ -12,6 +12,22 @@ export const conversation: QueryResolvers['conversation'] = ({ id }) => {
   })
 }
 
+interface findConversationByUserPairProps {
+  user1: number
+  user2: number
+}
+
+export const findConversationByUserPair: QueryResolvers['conversation'] = ({
+  user1,
+  user2,
+}: findConversationByUserPairProps) => {
+  return db.conversation.findMany({
+    where: {
+      UserConversation: { every: { OR: [{ id: user1 }, { id: user2 }] } },
+    },
+  })[0]
+}
+
 export const createConversation: MutationResolvers['createConversation'] = ({
   input,
 }) => {
