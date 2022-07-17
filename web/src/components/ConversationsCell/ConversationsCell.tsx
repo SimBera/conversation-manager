@@ -23,6 +23,10 @@ export const QUERY = gql`
     conversations {
       id
       title
+      UserConversation {
+        id
+        userId
+      }
     }
   }
 `
@@ -48,13 +52,16 @@ export const Success = ({
   const [selectedConversation, setSelectedConversation] = useState(undefined)
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 360 }}>
+    <Box sx={{ width: '100%' }}>
       <Grid container>
         <Grid item xs={4}>
           <List>
             {conversations.map((conversation) => {
               return (
-                <ListItem key={conversation.id}>
+                <ListItem
+                  onClick={() => setSelectedConversation(conversation)}
+                  key={conversation.id}
+                >
                   <ListItemButton>
                     <ListItemAvatar>
                       <Avatar alt="username" />
@@ -73,7 +80,7 @@ export const Success = ({
         </Grid>
         <Grid item xs={8}>
           {selectedConversation && (
-            <ConversationCell id={selectedConversation}></ConversationCell>
+            <ConversationCell id={selectedConversation.id}></ConversationCell>
           )}
         </Grid>
       </Grid>

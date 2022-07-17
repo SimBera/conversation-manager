@@ -6,26 +6,26 @@ export const standard = defineScenario<Prisma.UserConversationCreateArgs>({
       data: {
         user: {
           create: {
-            username: 'String613046',
+            username: 'String8007955',
             hashedPassword: 'String',
             salt: 'String',
             role: 'String',
           },
         },
-        conversation: { create: { title: 'String' } },
+        conversation: { create: {} },
       },
     },
     two: {
       data: {
         user: {
           create: {
-            username: 'String9686468',
+            username: 'String5920458',
             hashedPassword: 'String',
             salt: 'String',
             role: 'String',
           },
         },
-        conversation: { create: { title: 'String' } },
+        conversation: { create: {} },
       },
     },
   },

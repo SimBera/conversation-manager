@@ -86,6 +86,17 @@ Page in which user are registered.
 
 <img src="./documentation/conversations.png" alt="conversations" style="height:350px;"/>
 
+# Description
+ - Solution is implemented using redwoodJS framework
+ - Prisma ORM
+ - SQLite DB
+ - Graphql api interface
+ - React
+
+Database Schema:
+<img src="./documentation/db.jpeg" alt="dbschema" style="height:300px;"/>
+
+
 ## Prerequisites
 `yarn`
 # Setup
@@ -103,3 +114,6 @@ PRISMA_HIDE_UPDATE_MESSAGE=true
 LOG_LEVEL=trace
 SESSION_SECRET=zffzjCEfwm9tkfdBrsQGwS4VtfDjrpcghV4tWTmAAY8Pxt5DG3kFSTZfF8oH49Km
 ```
+
+
+

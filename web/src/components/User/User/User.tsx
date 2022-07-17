@@ -2,10 +2,10 @@ import { Button, Grid, Typography } from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
 import { Link, routes, navigate } from '@redwoodjs/router'
-import { useMutation } from '@redwoodjs/web'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { CREATE_CONVERSATION } from 'src/components/ConversationsCell'
+import { CREATE_CONVERSATION, QUERY } from 'src/components/ConversationsCell'
 
 import { User as IUser } from '../../../../types/graphql'
 
@@ -31,17 +31,30 @@ export const QUERY_USER = gql`
 
 const User = ({ user }) => {
   const { currentUser } = useAuth()
-  // const [createConversation, { loading }] = useMutation(CREATE_CONVERSATION, {
-  //   variables: { userId: user.id },
-  // })
+  const [createConversation, { loading }] = useMutation(CREATE_CONVERSATION, {
+    variables: { userId: user.id },
+  })
+  const { data } = useQuery(QUERY, {
+    onComplete: () => console.log(data),
+  })
 
   const handleOnclick = async () => {
+    if (data && data.conversations) {
+      // console.log(data)
+      const hasConversation = data.conversations.filter((conversation) => {
+        conversation.UserConversation.some(
+          (conv) => conv.userId === currentUser.id
+        )
+      })
+      console.log(hasConversation)
+    }
+
     // const response = await createConversation()
     // if (response.data) {
     //   await createConversation({
     //     variables: { id: response.data.id, userId: user.id },
     //   })
-    navigate(routes.conversations())
+    //   navigate(routes.conversations())
     // }
   }
 

@@ -8,8 +8,8 @@ export const schema = gql`
   }
 
   type Query {
-    userConversations: [UserConversation!]! @requireAuth
-    userConversation(id: Int!): UserConversation @requireAuth
+    userConversations: [UserConversation!]! @skipAuth
+    userConversation(id: Int!): UserConversation @skipAuth
   }
 
   input CreateUserConversationInput {
@@ -25,11 +25,11 @@ export const schema = gql`
   type Mutation {
     createUserConversation(
       input: CreateUserConversationInput!
-    ): UserConversation! @requireAuth
+    ): UserConversation! @skipAuth
     updateUserConversation(
       id: Int!
       input: UpdateUserConversationInput!
-    ): UserConversation! @requireAuth
-    deleteUserConversation(id: Int!): UserConversation! @requireAuth
+    ): UserConversation! @skipAuth
+    deleteUserConversation(id: Int!): UserConversation! @skipAuth
   }
 `
