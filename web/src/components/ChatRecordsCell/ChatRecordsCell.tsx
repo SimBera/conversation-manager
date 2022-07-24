@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment } from 'react'
 
 import {
   ListItem,
@@ -6,21 +6,27 @@ import {
   Avatar,
   ListItemText,
   Typography,
-  List,
+  Grid,
 } from '@mui/material'
-import type { ChatRecordsQuery } from 'types/graphql'
+import {
+  getChatRecordsByConversationId,
+  getChatRecordsByConversationIdVariables,
+} from 'types/graphql'
 
 import { useAuth } from '@redwoodjs/auth'
 import { CellSuccessProps, CellFailureProps, useQuery } from '@redwoodjs/web'
 
 export const QUERY = gql`
-  query ChatRecordsQuery {
-    chatRecords {
+  query getChatRecordsByConversationId($conversationId: Int!) {
+    chatRecords: getChatRecordsByConversationId(
+      conversationId: $conversationId
+    ) {
       id
       timeStamp
       message
       conversationId
       createdBy {
+        id
         imageUrl
         username
       }
@@ -38,35 +44,33 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({
   chatRecords,
-  conversation,
-}: CellSuccessProps<ChatRecordsQuery>) => {
+}: CellSuccessProps<
+  getChatRecordsByConversationId,
+  getChatRecordsByConversationIdVariables
+>) => {
   const { currentUser } = useAuth()
-  const [records, setRecords] = useState(chatRecords)
 
-  const { data } = useQuery(QUERY, { pollInterval: 50 })
-
-  useEffect(() => {
-    const filterd = data.chatRecords.filter(
-      (record) => record.conversationId === conversation.id
-    )
-    setRecords(filterd)
-  }, [data])
+  useQuery(QUERY, {
+    variables: { conversationId: chatRecords[0].conversationId || null },
+    pollInterval: 100,
+  })
 
   return (
     <>
-      {records &&
-        records.map((item) => {
-          return (
-            <ListItem
-              key={item.id}
-              alignItems={
-                currentUser.id === item.createdBy.id ? 'flex-start' : 'center'
-              }
-            >
+      {chatRecords.map((item) => {
+        return (
+          <Grid
+            alignSelf={
+              currentUser.id === item?.createdBy?.id ? 'flex-start' : 'flex-end'
+            }
+            key={item.id}
+            item
+          >
+            <ListItem>
               <ListItemAvatar>
                 <Avatar
                   alt="Remy Sharp"
-                  src={item.imageUrl || './male-placeholder-image'}
+                  src={item?.createdBy?.imageUrl || './male-placeholder-image'}
                 />
               </ListItemAvatar>
               <ListItemText
@@ -85,8 +89,9 @@ export const Success = ({
                 }
               />
             </ListItem>
-          )
-        })}
+          </Grid>
+        )
+      })}
     </>
   )
 }

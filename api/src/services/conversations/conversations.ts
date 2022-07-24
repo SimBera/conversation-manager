@@ -6,9 +6,21 @@ import type {
 
 import { db } from 'src/lib/db'
 
+import { userConversationsIdsByUserId } from '../userConversations/userConversations'
+
 export const conversations: QueryResolvers['conversations'] = () => {
   return db.conversation.findMany()
 }
+
+export const getConversationsByUserId: QueryResolvers['getConversationsByUserId'] =
+  async ({ userId }) => {
+    const userConversationIds = await userConversationsIdsByUserId({ userId })
+    return db.conversation.findMany({
+      where: {
+        id: { in: userConversationIds.map((item) => item.conversationId) },
+      },
+    })
+  }
 
 export const conversation: QueryResolvers['conversation'] = ({ id }) => {
   return db.conversation.findUnique({
@@ -16,13 +28,35 @@ export const conversation: QueryResolvers['conversation'] = ({ id }) => {
   })
 }
 
-export const createConversation: MutationResolvers['createConversation'] = ({
-  input,
-}) => {
-  return db.conversation.create({
-    data: input,
-  })
-}
+export const createConversation: MutationResolvers['createConversation'] =
+  async ({ input }) => {
+    const foundConversations = await db.userConversation.findMany({
+      where: { userId: { in: [input.sourceUserId, input.targetUserId] } },
+      select: { conversation: true },
+    })
+
+    if (
+      foundConversations.length === 2 &&
+      foundConversations[0].conversation.id ===
+        foundConversations[1].conversation.id
+    ) {
+      return foundConversations[0].conversation
+    }
+
+    const newConversation = await db.conversation.create({
+      data: { title: input.title },
+    })
+
+    await db.userConversation.create({
+      data: { conversationId: newConversation.id, userId: input.sourceUserId },
+    })
+
+    await db.userConversation.create({
+      data: { conversationId: newConversation.id, userId: input.targetUserId },
+    })
+
+    return newConversation
+  }
 
 export const updateConversation: MutationResolvers['updateConversation'] = ({
   id,

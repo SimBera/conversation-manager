@@ -16,6 +16,13 @@ export const chatRecord: QueryResolvers['chatRecord'] = ({ id }) => {
   })
 }
 
+export const getChatRecordsByConversationId: QueryResolvers['getChatRecordsByConversationId'] =
+  ({ conversationId }) => {
+    return db.chatRecord.findMany({
+      where: { conversationId },
+    })
+  }
+
 export const createChatRecord: MutationResolvers['createChatRecord'] = ({
   input,
 }) => {

@@ -12,6 +12,8 @@ export const schema = gql`
   type Query {
     chatRecords: [ChatRecord!]! @skipAuth
     chatRecord(id: Int!): ChatRecord @skipAuth
+    getChatRecordsByConversationId(conversationId: Int!): [ChatRecord!]!
+      @skipAuth
   }
 
   input CreateChatRecordInput {

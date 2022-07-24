@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import SendIcon from '@mui/icons-material/Send'
 import {
@@ -10,24 +10,25 @@ import {
   ListItemIcon,
   Typography,
   ListItemAvatar,
+  Paper,
+  Divider,
   Grid,
 } from '@mui/material'
-import type { ConversationsQuery } from 'types/graphql'
+import type {
+  getConversationsByUserId,
+  getConversationsByUserIdVariables,
+} from 'types/graphql'
 
-import { useAuth } from '@redwoodjs/auth'
+import { useParams } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import ConversationCell from '../ConversationCell'
 
 export const QUERY = gql`
-  query ConversationsQuery {
-    conversations {
+  query getConversationsByUserId($userId: Int!) {
+    conversations: getConversationsByUserId(userId: $userId) {
       id
       title
-      UserConversation {
-        id
-        userId
-      }
     }
   }
 `
@@ -35,9 +36,6 @@ export const CREATE_CONVERSATION = gql`
   mutation CreateConversationMutation($input: CreateConversationInput!) {
     createConversation(input: $input) {
       id
-      UserConversation {
-        userId
-      }
     }
   }
 `
@@ -52,32 +50,25 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({
   conversations,
-}: CellSuccessProps<ConversationsQuery>) => {
-  const { currentUser } = useAuth()
-  const [selectedConversation, setSelectedConversation] = useState(undefined)
-  const [yourConversations, setYourConversations] = useState([])
-
-  useEffect(() => {
-    const conversationsFiltered = conversations.filter(
-      (conv) =>
-        conv.UserConversation.filter(
-          (userconv) => userconv.userId === currentUser.id
-        ).length
-    )
-
-    setYourConversations(conversationsFiltered)
-  }, [conversations])
+}: CellSuccessProps<
+  getConversationsByUserId,
+  getConversationsByUserIdVariables
+>) => {
+  const { conversationId } = useParams()
+  const [selectedConversationId, setSelectedConversationId] = useState<
+    number | undefined
+  >(Number(conversationId) || undefined)
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ height: '100vh', width: '100%' }}>
       <Grid container>
         <Grid item xs={4}>
-          <List>
-            {yourConversations &&
-              yourConversations.map((conversation) => {
+          <Paper sx={{ height: '100vh' }}>
+            <List>
+              {conversations.map((conversation) => {
                 return (
                   <ListItem
-                    onClick={() => setSelectedConversation(conversation)}
+                    onClick={() => setSelectedConversationId(conversation.id)}
                     key={conversation.id}
                   >
                     <ListItemButton>
@@ -91,14 +82,16 @@ export const Success = ({
                         <SendIcon sx={{ paddingLeft: 2 }} />
                       </ListItemIcon>
                     </ListItemButton>
+                    <Divider />
                   </ListItem>
                 )
               })}
-          </List>
+            </List>
+          </Paper>
         </Grid>
         <Grid item xs={8}>
-          {selectedConversation && (
-            <ConversationCell id={selectedConversation.id}></ConversationCell>
+          {selectedConversationId && (
+            <ConversationCell id={selectedConversationId} />
           )}
         </Grid>
       </Grid>

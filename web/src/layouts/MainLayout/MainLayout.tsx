@@ -1,12 +1,4 @@
-import MenuIcon from '@mui/icons-material/Menu'
-import {
-  Grid,
-  Button,
-  AppBar,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@mui/material'
+import { Grid, Button, AppBar, Toolbar, Typography } from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
 import { Link, routes } from '@redwoodjs/router'
@@ -51,8 +43,8 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container>{children}</Grid>
       </Grid>
+      {children}
     </>
   )
 }

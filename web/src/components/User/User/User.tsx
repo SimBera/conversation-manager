@@ -2,10 +2,10 @@ import { Button, Grid, Typography } from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
 import { Link, routes, navigate } from '@redwoodjs/router'
-import { useMutation, useQuery } from '@redwoodjs/web'
+import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { CREATE_CONVERSATION, QUERY } from 'src/components/ConversationsCell'
+import { CREATE_CONVERSATION } from 'src/components/ConversationsCell'
 
 import { User as IUser } from '../../../../types/graphql'
 
@@ -29,60 +29,22 @@ export const QUERY_USER = gql`
   }
 `
 
-export const CREATE_USER_CONVERSATION = gql`
-  mutation CreateUserConversation($input: CreateUserConversationInput!) {
-    createUserConversation(input: $input) {
-      id
-      userId
-      conversationId
-    }
-  }
-`
-
 const User = ({ user }) => {
   const { currentUser } = useAuth()
   const [createConversation, { loading }] = useMutation(CREATE_CONVERSATION)
-  const { data } = useQuery(QUERY, )
-
-  const [createUserConversation] = useMutation(CREATE_USER_CONVERSATION)
 
   const handleOnclick = async () => {
-    if (data && data.conversations) {
-      const hasConversation = data.conversations.filter((conversation) => {
-        conversation.UserConversation.some(
-          (conv) => conv.userId === currentUser.id
-        )
-      })
-    }
-
     const response = await createConversation({
       variables: {
         input: {
           title: `chat with: ${user.username} and  ${currentUser.username}`,
+          sourceUserId: currentUser.id,
+          targetUserId: user.id,
         },
       },
     })
-
-    await createUserConversation({
-      variables: {
-        input: {
-          conversationId: response.data.createConversation.id,
-          userId: user.id,
-        },
-      },
-    })
-
-    await createUserConversation({
-      variables: {
-        input: {
-          conversationId: response.data.createConversation.id,
-          userId: currentUser.id,
-        },
-      },
-    })
-
-    if (response.data) {
-      const id = response.data.id
+    const id = response.data.createConversation.id
+    if (id) {
       navigate(routes.conversations({ conversationId: id }))
     }
   }
@@ -92,7 +54,11 @@ const User = ({ user }) => {
       <UserCard user={user}></UserCard>
       <Grid container>
         <Grid item>
-          <Button variant="contained" onClick={handleOnclick}>
+          <Button
+            variant="contained"
+            onClick={handleOnclick}
+            disabled={loading}
+          >
             <Typography>Send message</Typography>
           </Button>
         </Grid>
@@ -105,7 +71,7 @@ const User = ({ user }) => {
 }
 
 const AdminUserActions = ({ user }: AdminUserActionsProps) => {
-  const [deleteUser] = useMutation(DELETE_USER_MUTATION, {
+  const [deleteUser, { loading }] = useMutation(DELETE_USER_MUTATION, {
     onCompleted: () => {
       toast.success('User deleted')
       navigate(routes.users())
@@ -115,13 +81,14 @@ const AdminUserActions = ({ user }: AdminUserActionsProps) => {
     },
   })
 
-  const onDeleteClick = (id) => {
+  const onDeleteClick = () => {
     if (
       confirm('Are you sure you want to delete user ' + user.username + '?')
     ) {
-      deleteUser({ variables: { id } })
+      deleteUser({ variables: { id: user.id } })
     }
   }
+
   return (
     <>
       <Button
@@ -136,7 +103,8 @@ const AdminUserActions = ({ user }: AdminUserActionsProps) => {
         variant="contained"
         color="error"
         className="rw-button-red"
-        onClick={() => onDeleteClick(user.id)}
+        onClick={onDeleteClick}
+        disabled={loading}
       >
         <Typography>Delete</Typography>
       </Button>

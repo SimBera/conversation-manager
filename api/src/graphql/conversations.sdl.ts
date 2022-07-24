@@ -9,10 +9,13 @@ export const schema = gql`
   type Query {
     conversations: [Conversation!]! @skipAuth
     conversation(id: Int!): Conversation @skipAuth
+    getConversationsByUserId(userId: Int!): [Conversation!]! @skipAuth
   }
 
   input CreateConversationInput {
     title: String
+    sourceUserId: Int!
+    targetUserId: Int!
   }
 
   input UpdateConversationInput {

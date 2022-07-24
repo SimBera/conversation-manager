@@ -1,17 +1,7 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import SendIcon from '@mui/icons-material/Send'
-import {
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  Typography,
-  Paper,
-  TextField,
-  IconButton,
-} from '@mui/material'
+import { List, Paper, TextField, IconButton, Box, Grid } from '@mui/material'
 import type {
   FindConversationQuery,
   FindConversationQueryVariables,
@@ -20,7 +10,7 @@ import type {
 import { useAuth } from '@redwoodjs/auth'
 import { CellSuccessProps, CellFailureProps, useMutation } from '@redwoodjs/web'
 
-import CharRecordsCell from '../ChatRecordsCell'
+import ChatRecordsCell from '../ChatRecordsCell'
 
 export const QUERY = gql`
   query FindConversationQuery($id: Int!) {
@@ -66,15 +56,15 @@ export const Success = ({
   conversation,
 }: CellSuccessProps<FindConversationQuery, FindConversationQueryVariables>) => {
   const { currentUser } = useAuth()
-  const [createChatRecord, { data }] = useMutation(CREATE_RECORD)
-  const [message, setMessage] = useState('asd')
+  const [createChatRecord] = useMutation(CREATE_RECORD)
+  const [message, setMessage] = useState('')
 
   const onFieldChange = (data) => {
     setMessage(data.nativeEvent.target.value)
   }
 
-  const onButtonClick = () => {
-    createChatRecord({
+  const onButtonClick = async () => {
+    await createChatRecord({
       variables: {
         input: {
           createdById: currentUser.id,
@@ -84,23 +74,34 @@ export const Success = ({
         },
       },
     })
+    setMessage('')
   }
 
   return (
-    <>
-      <Paper elevation={3} sx={{ padding: 2, marginTop: 2 }}>
-        <List
-          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+    <Box component={Paper} elevation={3} sx={{ marginTop: 2, height: '70vh' }}>
+      <List
+        sx={{
+          width: '100%',
+          minHeight: '100%',
+        }}
+      >
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-end"
+          alignItems="center"
         >
-          <CharRecordsCell conversation={conversation}></CharRecordsCell>
-        </List>
-        <Paper>
-          <TextField onChange={onFieldChange} sx={{ width: '94%' }}></TextField>
-          <IconButton onClick={onButtonClick} aria-label="comment">
-            <SendIcon fontSize="large" />
-          </IconButton>
-        </Paper>
-      </Paper>
-    </>
+          <ChatRecordsCell conversationId={conversation.id}></ChatRecordsCell>
+        </Grid>
+      </List>
+      <TextField
+        onChange={onFieldChange}
+        value={message}
+        sx={{ width: '94%' }}
+      ></TextField>
+      <IconButton onClick={onButtonClick} aria-label="comment">
+        <SendIcon fontSize="large" />
+      </IconButton>
+    </Box>
   )
 }

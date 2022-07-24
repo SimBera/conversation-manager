@@ -18,6 +18,13 @@ export const userConversation: QueryResolvers['userConversation'] = ({
   })
 }
 
+export const userConversationsIdsByUserId = ({ userId }) => {
+  return db.userConversation.findMany({
+    where: { userId: userId },
+    select: { conversationId: true },
+  })
+}
+
 export const createUserConversation: MutationResolvers['createUserConversation'] =
   ({ input }) => {
     return db.userConversation.create({
