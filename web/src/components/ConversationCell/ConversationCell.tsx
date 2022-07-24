@@ -77,6 +77,12 @@ export const Success = ({
     setMessage('')
   }
 
+  const recordKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      onButtonClick()
+    }
+  }
+
   return (
     <Box component={Paper} elevation={3} sx={{ marginTop: 2, height: '70vh' }}>
       <List
@@ -95,6 +101,7 @@ export const Success = ({
         </Grid>
       </List>
       <TextField
+        onKeyDown={recordKeyDown}
         onChange={onFieldChange}
         value={message}
         sx={{ width: '94%' }}

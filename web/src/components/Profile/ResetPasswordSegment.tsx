@@ -94,6 +94,7 @@ export const ResetPasswordSegment = ({ resetToken }) => {
         ></Box>
         <FieldError name="repeat_password" className="rw-field-error" />
         <Button
+          sx={{ marginTop: 1 }}
           component={Submit}
           disabled={!enabled}
           className="rw-button rw-button-blue"

@@ -1,3 +1,5 @@
+import { Grid } from '@mui/material'
+
 import { useAuth } from '@redwoodjs/auth'
 import { navigate, routes } from '@redwoodjs/router'
 
@@ -14,15 +16,15 @@ const UsersList = ({ users }) => {
   }
 
   return (
-    <>
+    <Grid container>
       {users.map((user) => {
         return (
-          <>
+          <Grid key={user.id} item>
             <UserCard user={user} onClick={() => navigation(user.id)} />
-          </>
+          </Grid>
         )
       })}
-    </>
+    </Grid>
   )
 }
 

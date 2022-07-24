@@ -31,16 +31,22 @@ export const conversation: QueryResolvers['conversation'] = ({ id }) => {
 export const createConversation: MutationResolvers['createConversation'] =
   async ({ input }) => {
     const foundConversations = await db.userConversation.findMany({
-      where: { userId: { in: [input.sourceUserId, input.targetUserId] } },
-      select: { conversation: true },
+      where: {
+        userId: { in: [input.sourceUserId, input.targetUserId] },
+      },
+      select: { conversation: true, conversationId: true },
     })
 
-    if (
-      foundConversations.length === 2 &&
-      foundConversations[0].conversation.id ===
-        foundConversations[1].conversation.id
-    ) {
-      return foundConversations[0].conversation
+    const duplicates = foundConversations
+      .map((val) => val.conversationId)
+      .filter((val, index, a) => a.indexOf(val) !== index) // [2, 4]
+
+    console.dir(duplicates)
+
+    if (duplicates.length === 1) {
+      return foundConversations.find(
+        (conv) => conv.conversationId === duplicates[0]
+      ).conversation
     }
 
     const newConversation = await db.conversation.create({

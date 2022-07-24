@@ -64,51 +64,50 @@ const ProfilePage = () => {
       <Paper
         color="inherit"
         elevation={3}
-        sx={{ width: 1200, height: 600, padding: 2 }}
+        sx={{ width: '80vh', height: '40vh', padding: 2 }}
       >
         {loading ? (
           <LoadingSegment />
         ) : (
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container>
-              <Grid item xs={5}>
+          <Grid container>
+            <Grid item xs={6} container direction="column">
+              <Grid item>
                 <Box
-                  sx={{ maxWidth: 400, maxHeight: 400 }}
+                  sx={{ maxWidth: '35vh', maxHeight: '40vh' }}
                   component="img"
                   src={img || 'male-placeholder-image.jpeg'}
                   alt="profile_picture"
                 ></Box>
               </Grid>
-              <Grid item xs={5}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Button variant="contained" component="label">
-                      <PhotoCamera />
-                      <Typography>Upload</Typography>
-                      <input
-                        onChange={uploadPhoto}
-                        hidden
-                        accept="image/*"
-                        multiple
-                        type="file"
-                      />
-                    </Button>
-                  </Grid>
-                  <Grid item xs={5}>
-                    <Typography> Username: {currentUser.username}</Typography>
-                    <Typography> Role: {currentUser.role}</Typography>
-                  </Grid>
-                  <Grid item xs={5}>
-                    {resetToken ? (
-                      <ResetPasswordSegment resetToken={resetToken} />
-                    ) : (
-                      <RequestResetSegment setResetToken={setResetToken} />
-                    )}
-                  </Grid>
+              <Grid container>
+                <Grid item xs={7}>
+                  <Typography> Username: {currentUser.username}</Typography>
+                  <Typography> Role: {currentUser.role}</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button variant="contained" component="label">
+                    <PhotoCamera />
+                    <Typography>Upload</Typography>
+                    <input
+                      onChange={uploadPhoto}
+                      hidden
+                      accept="image/*"
+                      multiple
+                      type="file"
+                    />
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
-          </Box>
+
+            <Grid item xs={4} paddingTop={2}>
+              {resetToken ? (
+                <ResetPasswordSegment resetToken={resetToken} />
+              ) : (
+                <RequestResetSegment setResetToken={setResetToken} />
+              )}
+            </Grid>
+          </Grid>
         )}
       </Paper>
     </Container>
